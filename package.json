@@ -1,0 +1,15 @@
+{
+  "name": "api-backend",
+  "version": "7.0.1",
+  "private": true,
+  "scripts": {
+    "start": "supervisor ./bin/www",
+    "node --inspect-brk": "node --inspect-brk ./bin/www"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.8.0",
+    "tsc": "^2.0.4"
+  }
+}
