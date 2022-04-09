@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "dependencies": {
     "express": "^4.17.3",
-    "express-graphql": "^0.12.0",
+    "express-graphql": "^0.1  2.0",
     "graphql": "^15.8.0",
     "mongoose": "5.13.8",
     "nodemon": "^2.0.15",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
-    "build": "npx tsc --project ./",
+    "build1": "npx tsc --project ./",
     "start": "nodemon --exec ts-node src/index.ts"
   },
   "keywords": [],
