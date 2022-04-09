@@ -21,7 +21,7 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "npx tsc --project ./",
-    "start": "node ./dist/index.js"
+    "start": "npx tsc --project ./"
   },
   "keywords": [],
   "author": "",
