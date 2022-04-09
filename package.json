@@ -20,7 +20,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
-    "build1": "npx tsc --project .",
+    "build": "npx tsc --project .",
     "start": "node dist/index.js"
   },
   "keywords": [],
