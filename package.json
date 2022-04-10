@@ -21,7 +21,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
-    "build": "npx tsc --project .",
+    "build1": "npx tsc --project .",
     "start": "ts-node-dev --project tsconfig.json src/index.ts"
   },
   "engines": {
