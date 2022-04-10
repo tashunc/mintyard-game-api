@@ -36,7 +36,7 @@ conn.on('error', console.error.bind(console, 'connection error:'));
 
 conn.once('open', function () {
     // Wait for the database connection to establish, then start the app.
-    console.log('Connecting to port 3000')
+    // console.log('Connecting to port 3000')
     const app = express();
     const PORT = 3000
 
@@ -48,7 +48,8 @@ conn.once('open', function () {
 //     rootValue: root,
 //     graphiql: true,
 // }));
-    app.listen(PORT, () => console.log('Up in  localhost:3000'));
+// app.listen(process.env.PORT || 5000)
+    app.listen(process.env.PORT || 5000, () => console.log('listens to '.concat(process.env.PORT + 'or' +  5000) ));
 });
 
 
