@@ -49,7 +49,8 @@ conn.once('open', function () {
 //     graphiql: true,
 // }));
 // app.listen(process.env.PORT || 5000)
-    app.listen(process.env.PORT || 5000, () => console.log('listens to '.concat(process.env.PORT + 'or' +  5000) ));
+    app.listen(process.env.PORT || 5000,
+        () => console.log('listens to '.concat(process.env.PORT + ' or ' +  5000) ));
 });
 
 
