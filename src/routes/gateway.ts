@@ -5,11 +5,13 @@ export const router = express.Router();
 
 
 router.get('/', (req, res) => {
+    console.log('Hit for /')
     res.send('index');
 });
 
 
 router.post('/addScore', function (request, response) {
+    console.log('Hit for /addScore')
     const score = new Score({
         // _id: request.body.walletId + '_' + request.body.nftId,
         walletId: request.body.walletId,
@@ -28,6 +30,7 @@ router.post('/addScore', function (request, response) {
 });
 
 router.get('/getScores', (request, response) =>{
+    console.log('Hit for /getScores')
     Score.find( (err, InventoryItems) => {
         if (!err) {
             response.send(InventoryItems);
