@@ -1,5 +1,6 @@
 import express from 'express'
 import Score from '../models/Score'
+import {throws} from "assert";
 
 export const router = express.Router();
 
@@ -16,37 +17,57 @@ router.post('/addScore', function (request, response) {
         // _id: request.body.walletId + '_' + request.body.nftId,
         walletId: request.body.walletId,
         nftId: request.body.nftId,
+        contestId: request.body.contestId,
         turns: request.body.turns,
         time: request.body.time,
 
     });
+    if (!score || (!score.contestId || !score.nftId || !score.walletId)) {
+        response.send("Please Enter Valid Data");
+    }
     score.save( (err: any)=> {
         if (err) {
-            throw err;
+            response.send(err);
         } else {
             response.send("Data Saved Successfully!");
         }
     });
 });
-
+// update
+// wallet -> nft -> attempts
 router.get('/getScores', (request, response) =>{
     console.log('Hit for /getScores')
-    Score.find( (err, InventoryItems) => {
+    Score.find( (err, scores) => {
         if (!err) {
-            response.send(InventoryItems);
+            response.send(scores);
         } else {
             response.send(err)
         }
     });
 });
 
-router.get('/getScoreById', (request, response) =>{
-    Score.find( (err, InventoryItems) => {
-        if (!err) {
-            response.send(InventoryItems);
-        } else {
-            response.send(err)
+router.post('/updateScores', (request, response) => {
+    const score = new Score({
+        // _id: request.body.walletId + '_' + request.body.nftId,
+        walletId: request.body.walletId,
+        nftId: request.body.nftId,
+        contestId: request.body.contestId,
+        turns: request.body.turns,
+        time: request.body.time,
+
+    });
+
+    Score.updateOne({nftId: request.body.nftId, contestId: request.body.contestId}, {
+        $set: {
+            walletId: request.body.walletId,
+            turns: request.body.turns,
+            time: request.body.time,
         }
+    }).then((result:any) => {
+        if (result) {
+            console.log(result);
+        }
+        response.status(200).json({ message: "Update successful! " + result });
     });
 });
 
