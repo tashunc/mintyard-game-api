@@ -1,8 +1,8 @@
-import express from 'express';
 import {graphqlHTTP} from 'express-graphql';
 import buildSchema from 'express';
 import {router} from './routes/gateway';
 import mongoose from 'mongoose';
+const express = require('express');
 
 // const index = require('../routes/gateway');
 // const schema = buildSchema(`
