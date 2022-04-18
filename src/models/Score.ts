@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 interface IScoreSchema {
     walletId: string
+    contractId: string
     nftId: string,
     contestId: string
     turns: number,

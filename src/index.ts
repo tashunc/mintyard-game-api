@@ -19,12 +19,7 @@ import express from 'express';
 
 const mongodbUri = 'mongodb+srv://test:test123@cluster0.rqpga.mongodb.net/ScoreDatabase?retryWrites=true&w=majority';
 
-mongoose.connect(mongodbUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-}).then(() => console.log('MongoDB connected...'))
+mongoose.connect(mongodbUri).then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 //mongoose.connect('mongodb://127.0.0.1:27017/restaurant-management');
 
