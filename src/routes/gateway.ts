@@ -53,6 +53,10 @@ router.get('/getScores', (request, response) => {
 router.get('/getScoresForContestId', (request, response) => {
     console.log('Hit for /getScoresForContestId')
     console.log(request.query);
+    if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
+        response.send("Please Enter Valid Data");
+        return;
+    }
     Score.find({
         contractId: request.query.contractId,
         contestId: request.query.contestId
@@ -70,6 +74,10 @@ router.get('/getScoresForContestId', (request, response) => {
 router.get('/getAllNftId', (request, response) => {
     console.log('Hit for /getAllNftId')
     console.log(request.query);
+    if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
+        response.send("Please Enter Valid Data");
+        return;
+    }
     Score.find({
         contractId: request.query.contractId,
         contestId: request.query.contestId
