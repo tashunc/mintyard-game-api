@@ -10,6 +10,7 @@ interface IScoreSchema {
     time: number
 }
 
+
 const scoreSchema = new Schema<IScoreSchema>({
         walletId: {type: String, required: true},
         contractId: {type: String, required: true},
