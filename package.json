@@ -21,7 +21,8 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "build1": "npx tsc --project .",
     "build": "tsc --project .",
-    "start-local": "ts-node-dev --project tsconfig.json src/index.ts"
+    "start-local": "ts-node-dev --project tsconfig.json src/index.ts",
+    "start": "PROD=true --project tsconfig.json index.js"
   },
   "engines": {
     "npm": "8.5.0",
