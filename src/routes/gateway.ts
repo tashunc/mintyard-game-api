@@ -52,10 +52,10 @@ router.get('/getScores', (request, response) => {
  */
 router.get('/getScoresForContestId', (request, response) => {
     console.log('Hit for /getScoresForContestId')
-    console.log(request);
+    console.log(request.query);
     Score.find({
-        contractId: request.body.contractId,
-        contestId: request.body.contestId
+        contractId: request.query.contractId,
+        contestId: request.query.contestId
     }, (err: any, scores: any[]) => {
         if (!err) {
             response.send(scores);
@@ -69,11 +69,13 @@ router.get('/getScoresForContestId', (request, response) => {
  */
 router.get('/getAllNftId', (request, response) => {
     console.log('Hit for /getAllNftId')
-    console.log(request);
+    console.log(request.query);
     Score.find({
-        contractId: request.body.contractId,
-        contestId: request.body.contestId
+        contractId: request.query.contractId,
+        contestId: request.query.contestId
     }, (err: any, scores: any[]) => {
+        console.log(err)
+        console.log(scores)
         const nftIds: any[] = [];
         scores.forEach(score => {
             nftIds.push(score.nftId)
