@@ -22,7 +22,7 @@
     "build1": "npx tsc --project .",
     "build": "tsc --project .",
     "start-local": "ts-node-dev --project tsconfig.json src/index.ts",
-    "start": "PROD=true --project tsconfig.json index.js"
+    "start": "PROD=true node index.js"
   },
   "engines": {
     "npm": "8.5.0",
