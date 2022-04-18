@@ -6,7 +6,8 @@
   "dependencies": {
     "@types/express": "4.17.13",
     "express-graphql": "^0.12.0",
-    "mongoose": "6.3.0"
+    "mongoose": "6.3.0",
+    "ts-node": "~10.7.0"
 
   },
   "private": true,
@@ -30,8 +31,7 @@
   },
   "engines": {
     "npm": "8.5.0",
-    "node": "16.14.2",
-    "ts-node": "10.7.0"
+    "node": "16.14.2"
   },
   "keywords": [],
   "author": "",
