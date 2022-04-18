@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "dependencies": {
-    "@types/express": "4.17.13",
+    "express": "4.17.13",
     "express-graphql": "^0.12.0",
     "mongoose": "6.3.0",
     "ts-node": "10.7.0"
