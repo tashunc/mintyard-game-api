@@ -55,7 +55,7 @@ router.get('/getScoresForContestId', (request, response) => {
     Score.find({
         contractId: request.body.contractId,
         contestId: request.body.contestId
-    }, (err, scores) => {
+    }, (err: any, scores: any[]) => {
         if (!err) {
             response.send(scores);
         } else {
@@ -72,7 +72,7 @@ router.get('/getAllNftId', (request, response) => {
     Score.find({
         contractId: request.body.contractId,
         contestId: request.body.contestId
-    }, (err, scores) => {
+    }, (err: any, scores: any[]) => {
         const nftIds: any[] = [];
         scores.forEach(score => {
             nftIds.push(score.nftId)
