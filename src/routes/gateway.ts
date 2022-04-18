@@ -21,12 +21,13 @@ router.post('/addScore', function (request, response) {
         time: request.body.time,
 
     });
-    if (!score || (!score.contestId || !score.nftId || !score.walletId)) {
+    if (!score || (!score.contestId || !score.nftId || !score.walletId || !score.contractId)) {
         response.send("Please Enter Valid Data");
+        return;
     }
     score.save((err: any) => {
         if (err) {
-            response.send(err);
+            response.send('Error in adding Scores : ' + err);
         } else {
             response.send("Data Saved Successfully!");
         }
@@ -87,6 +88,11 @@ router.get('/getAllNftId', (request, response) => {
 
 router.put('/updateScores', (request, response) => {
     console.log('Hit for /updateScores')
+    if (!request.body || (!request.body.contestId || !request.body.nftId || !request.body.walletId || !request.body.contractId
+        || !(request.body.turns && request.body.turns > 0) || !(request.body.time && request.body.time > 0))) {
+        response.send("Please Enter Valid Data");
+        return;
+    }
     console.log(request);
     Score.updateOne({
         walletId: request.body.walletId,
