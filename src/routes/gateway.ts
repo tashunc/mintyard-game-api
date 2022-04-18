@@ -49,7 +49,6 @@ router.get('/getScores', (request, response) => {
 /**
  * get scores for a selected contest and contract ID
  */
-
 router.get('/getScoresForContestId', (request, response) => {
     console.log('Hit for /getScoresForContestId')
     console.log(request);
