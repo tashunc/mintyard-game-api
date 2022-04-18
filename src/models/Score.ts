@@ -12,6 +12,7 @@ interface IScoreSchema {
 
 const scoreSchema = new Schema<IScoreSchema>({
         walletId: {type: String, required: true},
+        contractId: {type: String, required: true},
         nftId: {type: String, required: true},
         contestId: {type: String, required: true},
         turns: {type: Number, required: true},
