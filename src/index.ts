@@ -1,8 +1,7 @@
-import {graphqlHTTP} from 'express-graphql';
-import buildSchema from 'express';
+
 import {router} from './routes/gateway';
 import mongoose from 'mongoose';
-const express = require('express');
+import express from 'express';
 
 // const index = require('../routes/gateway');
 // const schema = buildSchema(`
@@ -11,13 +10,12 @@ const express = require('express');
 //   }
 // `);
 
-const root = {hello: () => 'Hello world!'};
 
-const options = {
-    server: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}},
-    replset: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}}
-
-};
+// const options = {
+//     server: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}},
+//     replset: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}}
+//
+// };
 
 const mongodbUri = 'mongodb+srv://test:test123@cluster0.rqpga.mongodb.net/ScoreDatabase?retryWrites=true&w=majority';
 
@@ -36,9 +34,9 @@ conn.on('error', console.error.bind(console, 'connection error:'));
 
 conn.once('open', function () {
     // Wait for the database connection to establish, then start the app.
-    // console.log('Connecting to port 3000')
+    console.log('Connecting to port ' + process.env.Port)
     const app = express();
-    const PORT = 3000
+    // const PORT = 3000
 
     app.use(express.json())
 
