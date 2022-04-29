@@ -109,7 +109,9 @@ router.put('/updateScores', (request, response) => {
         walletId: request.body.walletId,
         contractId: request.body.contractId,
         nftId: request.body.nftId,
-        contestId: request.body.contestId
+        contestId: request.body.contestId,
+        turns: 0,
+        time: 0,
     }, {
         $set: {
             turns: request.body.turns,
