@@ -1,5 +1,6 @@
 import express from 'express'
 import Score from '../models/Score'
+import {Status} from '../models/Status';
 
 export const router = express.Router();
 
@@ -22,14 +23,14 @@ router.post('/addScore', function (request, response) {
 
     });
     if (!score || (!score.contestId || !score.nftId || !score.walletId || !score.contractId)) {
-        response.send("Please Enter Valid Data");
+        response.status(500).json(new Status(-1, 'Invalid Data', ''));
         return;
     }
     score.save((err: any) => {
         if (err) {
-            response.send('Error in adding Scores : ' + err);
+            response.status(500).json(new Status(-1, 'Seems you have played using this NFT before', err.toString()));
         } else {
-            response.send("Data Saved Successfully!");
+            response.status(200).json(new Status(1, 'Updated successful!', ''));
         }
     });
 });
@@ -54,7 +55,7 @@ router.get('/getScoresForContestId', (request, response) => {
     console.log('Hit for /getScoresForContestId')
     console.log(request.query);
     if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
-        response.send("Please Enter Valid Data");
+        response.status(500).json(new Status(-1, 'Invalid Data', ''));
         return;
     }
     Score.find({
@@ -75,7 +76,7 @@ router.get('/getAllNftId', (request, response) => {
     console.log('Hit for /getAllNftId')
     console.log(request.query);
     if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
-        response.send("Please Enter Valid Data");
+        response.status(500).json(new Status(-1, 'Invalid Data', ''));
         return;
     }
     Score.find({
@@ -100,7 +101,7 @@ router.put('/updateScores', (request, response) => {
     console.log('Hit for /updateScores')
     if (!request.body || (!request.body.contestId || !request.body.nftId || !request.body.walletId || !request.body.contractId
         || !(request.body.turns && request.body.turns > 0) || !(request.body.time && request.body.time > 0))) {
-        response.send("Please Enter Valid Data");
+        response.status(500).json(new Status(-1, 'Seems you have played using this NFT before', ''));
         return;
     }
     console.log(request);
@@ -118,9 +119,9 @@ router.put('/updateScores', (request, response) => {
         if (result) {
             console.log(result);
         }
-        response.status(200).json({message: "Update successful! " + result});
+        response.status(200).json(new Status(1, 'Updated successful!',  result.toString()));
     }).catch((error: any) => {
-        response.status(500).json({message: "Update unSuccessful please contact support with a Screen Shot : " + error});
+        response.status(500).json(new Status(-1, 'Update unSuccessful please contact support with a Screen Shot', error.toString()));
 
     });
 });
