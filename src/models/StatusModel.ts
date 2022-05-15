@@ -5,7 +5,7 @@ interface IStatus {
 
 }
 
-export class Status implements IStatus {
+export class StatusModel implements IStatus {
     code: number;
     description: string;
     additionalDescription: string;
@@ -17,6 +17,6 @@ export class Status implements IStatus {
     }
 
     StatusWithoutAdditionalDescription(code: number, description: string) {
-        new Status(code, description, '');
+        new StatusModel(code, description, '');
     }
 }
