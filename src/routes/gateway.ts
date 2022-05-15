@@ -1,6 +1,7 @@
 import express from 'express'
-import Score from '../models/Score'
-import {Status} from '../models/Status';
+import ScoreModel from '../models/ScoreModel'
+import {StatusModel} from '../models/StatusModel';
+import UsernameModel from "../models/UsernameModel";
 
 export const router = express.Router();
 
@@ -9,11 +10,49 @@ router.get('/', (req, res) => {
     res.send('API Backend is up and Running!!');
 });
 
+router.post('/addUsername', (request, response) => {
+    const username = new UsernameModel({
+        username: request.body.username,
+        walletId: request.body.walletId
+    });
+    username.save((err: any) => {
+        if (err) {
+            response.status(500).json(new StatusModel(-1, 'Seems the details already exists', err.toString()));
+        } else {
+            response.status(200).json(new StatusModel(1, 'Updated successful!', ''));
+        }
+    });
+});
 
+router.get('/getUsernames', (request, response) => {
+    console.log('Hit for /getUsername')
+    console.log(request);
+    UsernameModel.find((err, usernames) => {
+        if (!err) {
+            response.send(usernames);
+        } else {
+            response.send(err)
+        }
+    });
+});
+
+router.get('/hasUsername', (request, response) => {
+    console.log('Hit for /getUsername')
+    console.log(request.query.walletId);
+    UsernameModel.find({
+        walletId: request.query.walletId
+    }, (err: any, users: any[]) => {
+        if (!err) {
+            response.send(users && users[0] ? users[0] : null);
+        } else {
+            response.send(err)
+        }
+    });
+});
 router.post('/addScore', function (request, response) {
     console.log('Hit for /addScore')
     console.log(request);
-    const score = new Score({
+    const score = new ScoreModel({
         walletId: request.body.walletId,
         contractId: request.body.contractId,
         nftId: request.body.nftId,
@@ -23,14 +62,14 @@ router.post('/addScore', function (request, response) {
 
     });
     if (!score || (!score.contestId || !score.nftId || !score.walletId || !score.contractId)) {
-        response.status(500).json(new Status(-1, 'Invalid Data', ''));
+        response.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
         return;
     }
     score.save((err: any) => {
         if (err) {
-            response.status(500).json(new Status(-1, 'Seems you have played using this NFT before', err.toString()));
+            response.status(500).json(new StatusModel(-1, 'Seems you have played using this NFT before', err.toString()));
         } else {
-            response.status(200).json(new Status(1, 'Updated successful!', ''));
+            response.status(200).json(new StatusModel(1, 'Updated successful!', ''));
         }
     });
 });
@@ -40,7 +79,7 @@ router.post('/addScore', function (request, response) {
 router.get('/getScores', (request, response) => {
     console.log('Hit for /getScores')
     console.log(request);
-    Score.find((err, scores) => {
+    ScoreModel.find((err, scores) => {
         if (!err) {
             response.send(scores);
         } else {
@@ -55,10 +94,10 @@ router.get('/getScoresForContestId', (request, response) => {
     console.log('Hit for /getScoresForContestId')
     console.log(request.query);
     if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
-        response.status(500).json(new Status(-1, 'Invalid Data', ''));
+        response.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
         return;
     }
-    Score.find({
+    ScoreModel.find({
         contractId: request.query.contractId,
         contestId: request.query.contestId
     }, (err: any, scores: any[]) => {
@@ -76,10 +115,10 @@ router.get('/getAllNftId', (request, response) => {
     console.log('Hit for /getAllNftId')
     console.log(request.query);
     if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
-        response.status(500).json(new Status(-1, 'Invalid Data', ''));
+        response.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
         return;
     }
-    Score.find({
+    ScoreModel.find({
         contractId: request.query.contractId,
         contestId: request.query.contestId
     }, (err: any, scores: any[]) => {
@@ -101,11 +140,11 @@ router.put('/updateScores', (request, response) => {
     console.log('Hit for /updateScores')
     if (!request.body || (!request.body.contestId || !request.body.nftId || !request.body.walletId || !request.body.contractId
         || !(request.body.turns && request.body.turns > 0) || !(request.body.time && request.body.time > 0))) {
-        response.status(500).json(new Status(-1, 'Seems you have played using this NFT before', ''));
+        response.status(500).json(new StatusModel(-1, 'Seems you have played using this NFT before', ''));
         return;
     }
     console.log(request);
-    Score.updateOne({
+    ScoreModel.updateOne({
         walletId: request.body.walletId,
         contractId: request.body.contractId,
         nftId: request.body.nftId,
@@ -121,9 +160,9 @@ router.put('/updateScores', (request, response) => {
         if (result) {
             console.log(result);
         }
-        response.status(200).json(new Status(1, 'Updated successful!',  result.toString()));
+        response.status(200).json(new StatusModel(1, 'Updated successful!',  result.toString()));
     }).catch((error: any) => {
-        response.status(500).json(new Status(-1, 'Update unSuccessful please contact support with a Screen Shot', error.toString()));
+        response.status(500).json(new StatusModel(-1, 'Update unSuccessful please contact support with a Screen Shot', error.toString()));
 
     });
 });
