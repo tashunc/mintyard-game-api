@@ -26,5 +26,5 @@ scoreSchema.index({nftId: 1, contractId: 1, contestId: 1}, {unique: true})
 
 
 
-const ScoreModel = mongoose.model('ScoreModel', scoreSchema);
+const ScoreModel = mongoose.model('Score', scoreSchema);
 export default ScoreModel;
