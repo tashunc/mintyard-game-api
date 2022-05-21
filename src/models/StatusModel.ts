@@ -20,3 +20,8 @@ export class StatusModel implements IStatus {
         new StatusModel(code, description, '');
     }
 }
+
+export enum ERROR_CONSTANTS {
+    SUCCESS = 1,
+    ERROR = 0
+}

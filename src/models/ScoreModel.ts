@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 interface IScoreSchema {
+    username:string,
     walletId: string
     contractId: string
     nftId: string,
@@ -12,6 +13,7 @@ interface IScoreSchema {
 }
 
 const scoreSchema = new Schema<IScoreSchema>({
+        username: {type: String, required: true},
         walletId: {type: String, required: true},
         contractId: {type: String, required: true},
         nftId: {type: String, required: true},
@@ -25,6 +27,5 @@ const scoreSchema = new Schema<IScoreSchema>({
 scoreSchema.index({nftId: 1, contractId: 1, contestId: 1}, {unique: true})
 
 
-
-const ScoreModel = mongoose.model('ScoreModels', scoreSchema);
+const ScoreModel = mongoose.model('ScoreModel', scoreSchema);
 export default ScoreModel;

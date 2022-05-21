@@ -1,16 +1,130 @@
 import express from 'express'
 import ScoreModel from '../models/ScoreModel'
-import {StatusModel} from '../models/StatusModel';
+import {ERROR_CONSTANTS, StatusModel} from '../models/StatusModel';
 import UsernameModel from "../models/UsernameModel";
+import initializeMoralis, {getNFTOwners} from "../services/moralis-services";
+import Moralis from "moralis/node";
+import mongoose from "mongoose";
+import {ERC1155DataModel} from "../models/ERC1155DataModel";
+import {
+    addStatsAndGenerateResponse,
+    getERC1155DataBackupModelPromiseReject,
+    getERC1155DataModelPromiseWithReject,
+    mapToERC1155DataBackupModel,
+    mapToERC1155DataModel,
+    saveListRecursively,
+    saveListRecursivelyWithBkp
+} from "../utils/general-utils";
+import {ERC1155DataModelBkp} from "../models/ERC1155DataModelBkp";
+import usernameModel from "../models/UsernameModel";
 
 export const router = express.Router();
+let nonDistributiveLockAcquired = false;
 
-
-router.get('/', (req, res) => {
+router.get('/', (req: any, res: any) => {
     res.send('API Backend is up and Running!!');
 });
 
-router.post('/addUsername', (request, response) => {
+router.get('/wakeMoralisServer', (req: any, res: any) => {
+    initializeMoralis().subscribe(() => res.send('Server started!!'));
+});
+
+router.get('/getNFTOwnersFromServer', (req: any, res: any) => {
+    const buckData = {
+        address: req.query.address,
+        chain: req.query.chain
+    };
+    const subscription = getNFTOwners(buckData).subscribe(data => {
+        if (data) {
+            subscription.unsubscribe();
+            res.send(data);
+        }
+    });
+});
+
+router.get('/getNFTOwnersFromDB', (req: any, res: any) => {
+    ERC1155DataModel.find((err:any, data:any) => {
+        if (err) {
+            res.status(500).json(new StatusModel(-1, 'Seems the details already exists', err.toString()));
+        } else {
+            res.status(200).json(new StatusModel(1, 'Updated successful!', ''));
+        }
+    })
+});
+
+router.get('/persistInDB', (req: any, res: any) => {
+    const buckData = {
+        address: req.query.address,
+        chain: req.query.chain
+    };
+    if (!buckData.chain || !buckData.address) {
+        res.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
+    }
+    if (!nonDistributiveLockAcquired) {
+        nonDistributiveLockAcquired = true;
+        const subscription = getNFTOwners(buckData).subscribe(async (data: any) => {
+            if (data && data.result && data.result.length > 0) {
+                let isError = false;
+                let savedCount = 0;
+                let backedUpCount = 0;
+                let backedUpErrorCount = 0;
+                subscription.unsubscribe()
+                for (const item of data.result) {
+                    getERC1155DataModelPromiseWithReject(item).then((status) =>{
+                        if (status===ERROR_CONSTANTS.SUCCESS) {
+                            savedCount++
+                            addStatsAndGenerateResponse(isError,res,savedCount,backedUpCount,backedUpErrorCount,data,nonDistributiveLockAcquired);
+                        }
+                    }).catch((err) => {
+                        getERC1155DataBackupModelPromiseReject(item).then(success => {
+                            if (success===ERROR_CONSTANTS.SUCCESS) {
+                                backedUpCount++
+                                addStatsAndGenerateResponse(isError,res,savedCount,backedUpCount,backedUpErrorCount,data,nonDistributiveLockAcquired);
+                            }
+                        }).catch(err => console.error(item + '\n' + err));
+                        backedUpErrorCount++;
+                        addStatsAndGenerateResponse(isError,res,savedCount,backedUpCount,backedUpErrorCount,data,nonDistributiveLockAcquired);
+                    })
+                }
+            }
+        });
+    } else {
+        res.status(500).json(new StatusModel(-1, 'Server is busy processing', ''));
+    }
+});
+
+router.get('/removePersistLock', (req: any, res:any) => {
+    nonDistributiveLockAcquired = false;
+});
+
+router.get('/deleteAll', (req: any, res: any) => {
+    const buckData = {
+        address: req.query.address,
+        chain: req.query.chain
+    };
+    ERC1155DataModel.find((err:any, data:any) => {
+        if (!err) {
+            const savingSchemaBkp = new ERC1155DataModelBkp({
+                token_address: data.token_address,
+                token_id: data.token_id,
+                owner_of: data.owner_of,
+                amount: data.amount,
+                name: data.name,
+                token_uri: data.token_uri,
+                last_token_uri_sync: data.last_token_uri_sync,
+                last_metadata_sync: data.last_metadata_sync
+            });
+            savingSchemaBkp.save();
+            data.remove();
+        } else {
+            res.send(err)
+        }
+    });
+});
+
+
+
+router.post('/addUsername', (request: any, response: any) => {
     const username = new UsernameModel({
         username: request.body.username,
         walletId: request.body.walletId
@@ -24,7 +138,7 @@ router.post('/addUsername', (request, response) => {
     });
 });
 
-router.get('/getUsernames', (request, response) => {
+router.get('/getUsernames', (request: any, response: any) => {
     console.log('Hit for /getUsername')
     console.log(request);
     UsernameModel.find((err, usernames) => {
@@ -36,7 +150,7 @@ router.get('/getUsernames', (request, response) => {
     });
 });
 
-router.get('/hasUsername', (request, response) => {
+router.get('/hasUsername', (request: any, response: any) => {
     console.log('Hit for /getUsername')
     console.log(request.query.walletId);
     UsernameModel.find({
@@ -49,10 +163,11 @@ router.get('/hasUsername', (request, response) => {
         }
     });
 });
-router.post('/addScore', function (request, response) {
+router.post('/addScore', function (request: any, response: any) {
     console.log('Hit for /addScore')
     console.log(request);
     const score = new ScoreModel({
+        username: request.body.username,
         walletId: request.body.walletId,
         contractId: request.body.contractId,
         nftId: request.body.nftId,
@@ -61,10 +176,11 @@ router.post('/addScore', function (request, response) {
         time: request.body.time,
 
     });
-    if (!score || (!score.contestId || !score.nftId || !score.walletId || !score.contractId)) {
+    if (!score || (!score.contestId || !score.nftId || !score.walletId || !score.contractId || !score.username)) {
         response.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
         return;
     }
+    UsernameModel.find({ walletId: request.body.walletId})
     score.save((err: any) => {
         if (err) {
             response.status(500).json(new StatusModel(-1, 'Seems you have played using this NFT before', err.toString()));
@@ -76,7 +192,7 @@ router.post('/addScore', function (request, response) {
 /**
  * get scores for all contests
  */
-router.get('/getScores', (request, response) => {
+router.get('/getScores', (request: any, response: any) => {
     console.log('Hit for /getScores')
     console.log(request);
     ScoreModel.find((err, scores) => {
@@ -90,7 +206,7 @@ router.get('/getScores', (request, response) => {
 /**
  * get scores for a selected contest and contract ID
  */
-router.get('/getScoresForContestId', (request, response) => {
+router.get('/getScoresForContestId', (request: any, response: any) => {
     console.log('Hit for /getScoresForContestId')
     console.log(request.query);
     if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
@@ -111,7 +227,7 @@ router.get('/getScoresForContestId', (request, response) => {
 /**
  * get scores for all contests and contract ID
  */
-router.get('/getAllNftId', (request, response) => {
+router.get('/getAllNftId', (request: any, response: any) => {
     console.log('Hit for /getAllNftId')
     console.log(request.query);
     if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
@@ -136,15 +252,16 @@ router.get('/getAllNftId', (request, response) => {
     });
 });
 
-router.put('/updateScores', (request, response) => {
+router.put('/updateScores', (request: any, response: any) => {
     console.log('Hit for /updateScores')
     if (!request.body || (!request.body.contestId || !request.body.nftId || !request.body.walletId || !request.body.contractId
-        || !(request.body.turns && request.body.turns > 0) || !(request.body.time && request.body.time > 0))) {
+        || !(request.body.turns && request.body.turns > 0) || !(request.body.time && request.body.time > 0) || !request.body.username)) {
         response.status(500).json(new StatusModel(-1, 'Seems you have played using this NFT before', ''));
         return;
     }
     console.log(request);
     ScoreModel.updateOne({
+        username: request.body.username,
         walletId: request.body.walletId,
         contractId: request.body.contractId,
         nftId: request.body.nftId,

@@ -1,8 +1,10 @@
 
 import {router} from './routes/gateway';
 import mongoose from 'mongoose';
-import express from 'express';
+import initializeMoralis from "./services/moralis-services";
+const express = require('express')
 const cors = require('cors');
+
 
 // const index = require('../routes/gateway');
 // const schema = buildSchema(`
@@ -17,7 +19,7 @@ const cors = require('cors');
 //     replset: {socketOptions: {keepAlive: 300000, connectTimeoutMS: 30000}}
 //
 // };
-
+initializeMoralis().subscribe((data: any) => {console.log(data)})
 const mongodbUri = 'mongodb+srv://test:test123@cluster0.rqpga.mongodb.net/ScoreDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(mongodbUri).then(() => console.log('MongoDB connected...'))
@@ -35,7 +37,7 @@ conn.once('open', function () {
     // const PORT = 3000
 
     app.use(express.json())
-    app.use((req, res, next) => {
+    app.use((req: any, res:any, next:any) => {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
