@@ -27,14 +27,7 @@ const ERC1155DataModelSchema = new Schema<IERC1155DataModel>({
         timestamps: true
     });
 ERC1155DataModelSchema.index({
-    token_address: 1,
-    token_id: 1,
     owner_of: 1,
-    amount: 1,
-    name: 1,
-    token_uri: 1,
-    last_token_uri_sync: 1,
-    last_metadata_sync: 1
 }, {unique: true})
 
 
