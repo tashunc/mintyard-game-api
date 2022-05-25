@@ -47,7 +47,7 @@ router.get('/getNFTOwnersFromDB', (req: any, res: any) => {
         if (err) {
             res.status(500).json(new StatusModel(-1, 'Seems the details already exists', err.toString()));
         } else {
-            res.status(200).json(new StatusModel(1, 'Updated successful!', ''));
+            res.send(data);
         }
     })
 });

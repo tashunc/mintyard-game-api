@@ -15,7 +15,7 @@ export interface IERC1155DataModel {
 
 const ERC1155DataModelSchema = new Schema<IERC1155DataModel>({
         token_address: {type: String, required: true},
-        token_id: {type: String},
+        token_id: {type: String, required: true},
         owner_of: {type: String, required: true},
         amount: {type: String, required: true},
         name: {type: String, required: true},
@@ -27,6 +27,7 @@ const ERC1155DataModelSchema = new Schema<IERC1155DataModel>({
         timestamps: true
     });
 ERC1155DataModelSchema.index({
+    token_address: 1,
     owner_of: 1,
 }, {unique: true})
 
