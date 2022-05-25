@@ -98,28 +98,50 @@ router.get('/removePersistLock', (req: any, res:any) => {
 });
 
 router.get('/deleteAll', (req: any, res: any) => {
-    const buckData = {
+   const buckData = {
         address: req.query.address,
         chain: req.query.chain
     };
-    ERC1155DataModel.find((err:any, data:any) => {
-        if (!err) {
-            const savingSchemaBkp = new ERC1155DataModelBkp({
-                token_address: data.token_address,
-                token_id: data.token_id,
-                owner_of: data.owner_of,
-                amount: data.amount,
-                name: data.name,
-                token_uri: data.token_uri,
-                last_token_uri_sync: data.last_token_uri_sync,
-                last_metadata_sync: data.last_metadata_sync
-            });
-            savingSchemaBkp.save();
-            data.remove();
-        } else {
-            res.send(err)
-        }
-    });
+    if (!buckData.address || !buckData.address) {
+        res.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
+    } else {
+        ERC1155DataModel.find((err:any, data:any) => {
+            if (!err) {
+                const savingSchemaBkp = new ERC1155DataModelBkp({
+                    token_address: data.token_address,
+                    token_id: data.token_id,
+                    owner_of: data.owner_of,
+                    amount: data.amount,
+                    name: data.name,
+                    token_uri: data.token_uri,
+                    last_token_uri_sync: data.last_token_uri_sync,
+                    last_metadata_sync: data.last_metadata_sync
+                });
+                savingSchemaBkp.save();
+                data.remove();
+            } else {
+                res.send(err)
+            }
+        });
+    }
+});
+
+router.get('/getNFTIdsForUser', (req: any, res:any) => {
+
+    const buckData = {
+        owner_of: req.query.walletId
+    };
+    if (!buckData.owner_of) {
+        res.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
+    } else {
+        ERC1155DataModel.find(buckData,(err:any, data:any) => {
+            if (err) {
+                res.send(err);
+            } else {
+                res.send(data)
+            }
+        })
+    }
 });
 
 
