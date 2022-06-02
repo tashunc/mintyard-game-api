@@ -24,7 +24,7 @@ const scoreSchema = new Schema<IScoreSchema>({
     {
         timestamps: true
     });
-scoreSchema.index({nftId: 1, contractId: 1, contestId: 1, username: 1, walletId: 1}, {unique: true})
+// scoreSchema.index({nftId: 1, contractId: 1, contestId: 1, username: 1, walletId: 1}, {unique: true})
 
 
 const ScoreModel = mongoose.model('ScoreModel', scoreSchema);
