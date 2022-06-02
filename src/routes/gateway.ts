@@ -129,9 +129,10 @@ router.get('/deleteAll', (req: any, res: any) => {
 router.get('/getNFTIdsForUser', (req: any, res:any) => {
 
     const buckData = {
-        owner_of: req.query.walletId
+        owner_of: req.query.walletId,
+        token_address: req.query.contractId
     };
-    if (!buckData.owner_of) {
+    if (!buckData.owner_of || !buckData.token_address) {
         res.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
     } else {
         ERC1155DataModel.find(buckData,(err:any, data:any) => {
