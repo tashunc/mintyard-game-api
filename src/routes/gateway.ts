@@ -253,12 +253,13 @@ router.get('/getScoresForContestId', (request: any, response: any) => {
 router.get('/getAllNftId', (request: any, response: any) => {
     console.log('Hit for /getAllNftId')
     console.log(request.query);
-    if (!request|| !request.query || !request.query.contractId || !request.query.contestId) {
+    if (!request|| !request.query || !request.query.contractId || !request.query.contestId|| !request.query.walletId) {
         response.status(500).json(new StatusModel(-1, 'Invalid Data', ''));
         return;
     }
     ScoreModel.find({
         contractId: request.query.contractId,
+        walletId: request.query.walletId,
         contestId: request.query.contestId
     }, (err: any, scores: any[]) => {
         console.log(err)
