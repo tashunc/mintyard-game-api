@@ -3,8 +3,6 @@ import ScoreModel from '../models/ScoreModel'
 import {ERROR_CONSTANTS, StatusModel} from '../models/StatusModel';
 import UsernameModel from "../models/UsernameModel";
 import initializeMoralis, {getNFTOwners} from "../services/moralis-services";
-import Moralis from "moralis/node";
-import mongoose from "mongoose";
 import {ERC1155DataModel} from "../models/ERC1155DataModel";
 import {
     addStatsAndGenerateResponse,
