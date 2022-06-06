@@ -8,7 +8,6 @@ import {
     addStatsAndGenerateResponse,
     getERC1155DataBackupModelPromiseReject,
     getERC1155DataModelPromiseWithReject,
-    mapToERC1155DataBackupModel,
     mapToERC1155DataModel,
     saveListRecursively,
     saveListRecursivelyWithBkp
