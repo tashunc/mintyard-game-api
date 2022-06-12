@@ -33,13 +33,14 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "local-dev": "tsc .",
     "build1": "npx tsc --project .",
-    "build": "tsc --project .",
+    "build-latest": "tsc --project .",
     "build-src": "tsc --project .",
     "test": "jest",
     "start-build": "node ./dist/index.js",
     "start-local": "ts-node-dev --project tsconfig.json src/index.ts",
     "start-local1": "ts-node --transpile-only ./src/index.ts",
-    "start": "node ./build/index.js"
+    "start1": "node ./build/index.js",
+    "start": "ts-node --transpile-only ./src/index.ts"
   },
   "engines": {
     "npm": "8.1.2",
