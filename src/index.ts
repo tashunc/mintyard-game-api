@@ -4,7 +4,8 @@ import mongoose from 'mongoose';
 import initializeMoralis from "./services/moralis-services";
 const express = require('express')
 const cors = require('cors');
-
+const dotenv = require('dotenv');
+dotenv.config();
 
 // const index = require('../routes/gateway');
 // const schema = buildSchema(`
@@ -20,7 +21,7 @@ const cors = require('cors');
 //
 // };
 initializeMoralis().subscribe((data: any) => {console.log(data)})
-const mongodbUri = 'mongodb+srv://test:test123@cluster0.rqpga.mongodb.net/ScoreDatabase?retryWrites=true&w=majority';
+const mongodbUri = (process.env.MONGODB_URI)? process.env.MONGODB_URI : 'mongodb+srv://test:test123@cluster0.rqpga.mongodb.net/ScoreDatabase?retryWrites=true&w=majority';
 
 mongoose.connect(mongodbUri).then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
@@ -32,7 +33,7 @@ conn.on('error', console.error.bind(console, 'connection error:'));
 
 conn.once('open', function () {
     // Wait for the database connection to establish, then start the app.
-    console.log('Connecting to port ' + process.env.Port)
+    console.log('Connecting to port ' + process.env.PORT)
     const app = express();
     // const PORT = 3000
 
