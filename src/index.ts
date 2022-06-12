@@ -28,9 +28,9 @@ mongoose.connect(mongodbUri).then(() => console.log('MongoDB connected...'))
     .catch(err => console.log(err));
 //mongoose.connect('mongodb://127.0.0.1:27017/restaurant-management');
 Moralis.start({
-    serverUrl: (process.env.MORALIS_SERVER_URL) ? (process.env.MORALIS_SERVER_URL) : 'https://ujwkj69jqehg.usemoralis.com:2053/server',
-    appId: process.env.MORALIS_APP_ID ? process.env.MORALIS_APP_ID : 'b7cTHjuYvIPoMjIdN8bBaUOvhKCr2ARGTek8UWCO',
-    masterKey: (process.env.MASTER_KEY) ? process.env.MASTER_KEY : 'XnXh90R9K4do0yFp4mXLv5lE3PKM7yHon1x7Dg4K'
+    serverUrl: (process.env.MORALIS_SERVER_URL) ? (process.env.MORALIS_SERVER_URL) : 'https://hzbiqb1mdks1.usemoralis.com:2053/server',
+    appId: process.env.MORALIS_APP_ID ? process.env.MORALIS_APP_ID : 'Rz6XqAlt6TueWfsj9rT8kJgfS9H0ATfUgDiz7Gbp',
+    masterKey: (process.env.MASTER_KEY) ? process.env.MASTER_KEY : 'pKEuDjHhgPFTcmj6REO9eOnwwJmd3GJRhmDD98fi'
 });
 
 const conn = mongoose.connection;
